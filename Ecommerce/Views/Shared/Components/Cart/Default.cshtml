@@ -39,7 +39,7 @@
                 Quantidade: @quantities[i]
             </p>
             <p>
-                <button onclick="RemoveFromCart(@product.Id)">Remover</button>
+                <button onclick="RemoveFromCart(@Json.Serialize(Model),@product.Id)">Remover</button>
             </p>
         </div>
         totalPrice += quantities[i] * product.Price;
