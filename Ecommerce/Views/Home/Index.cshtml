@@ -1,8 +1,59 @@
-ï»¿@{
-    ViewData["Title"] = "Home Page";
+@model IEnumerable<Product>
+@{
+    ViewData["Title"] = "Página inicial";
+    ViewData["Description"] = "Página inicial da loja online";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="home-div">
+    <div class="product-search">
+        <form method="get" class="search-form">
+            <label>Procurar produto: </label>
+            <input class="search-bar" name="query" type="text" autocomplete="on" required>
+            <button type="submit" asp-controller="Home" asp-action="Index">Pesquisar</button>
+        </form>
+
+        <section id="products" class="products">
+            @{
+                string inputQuantityId(int index) => "inputQuantity_" + index;
+                string buttonAddToCartId(int index) => "buttonAddToCart_" + index;
+
+                int index = 0;
+                foreach (Product product in Model)
+                {
+                    string inputIdIndex = inputQuantityId(index);
+                    <div class="product">
+                        <img class="product-img" src="@product.ImagePath" alt="imagem do produto" width="100" />
+                        <p>
+                            @product.Name
+                        </p>
+                        <p>
+                            Preço unitário: R$@product.Price
+                        </p>
+                        <p>
+                            Quantidade: <input id="@inputIdIndex" type="number" min="1" step="1" onchange="this.value = Math.max(1,parseInt(this.value))">
+                        </p>
+                        <p>
+                            <button id="@buttonAddToCartId(index)"
+                                    onclick="const quantity = Number(document.getElementById('@inputIdIndex').value);
+                                             addToCart(quantity, @product.Id);">
+                                Adicionar ao carrinho
+                            </button>
+                        </p>
+                    </div>
+                    index++;
+                }
+                if (index == 0)
+                {
+                    <p>
+                        Nenhum resultado.
+                    </p>
+                }
+            }
+        </section>
+    </div>
+    <aside id="cart" class="cart">
+        @await Component.InvokeAsync("Cart",true)
+    </aside>
 </div>
+
+<script src="~/js/cart.js"></script>
