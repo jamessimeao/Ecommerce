@@ -1,0 +1,71 @@
+﻿@using System.Data
+@using Ecommerce.Data.Dapper
+@using Ecommerce.Services
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject IDbConnection dbConnection
+
+@model bool
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <link rel="stylesheet" href="~/css/cart.css" />
+    string userId = UserInfo.GetUserId(User);
+    IEnumerable<CartEntry> cart = await DataManipulation.GetUserCart(dbConnection, userId);
+    List<int> productIds = [];
+    List<int> quantities = [];
+    foreach (CartEntry cartEntry in cart)
+    {
+        productIds.Add(cartEntry.ProductId);
+        quantities.Add(cartEntry.Quantity);
+    }
+    IEnumerable<Product> cartProducts = await DataManipulation.GetProductsFromIds(dbConnection, productIds);
+
+    <h2>Carrinho</h2>
+
+    int i = 0;
+    Decimal totalPrice = 0;
+    foreach (Product product in cartProducts)
+    {
+        <div class="product">
+            <img class="product-img" src="@product.ImagePath" alt="imagem do produto" width="100" />
+            <p>
+                @product.Name
+            </p>
+            <p>
+                Preço unitário: R$@product.Price
+            </p>
+            <p>
+                Quantidade: @quantities[i]
+            </p>
+            <p>
+                <button onclick="RemoveFromCart(@product.Id)">Remover</button>
+            </p>
+        </div>
+        totalPrice += quantities[i] * product.Price;
+        i++;
+    }
+    @*Only enable Esvaziar carrinho and Finalizar compra buttons if there are items in the cart*@
+    @if (i > 0)
+    {
+        <p class="total-price">
+            Preço Total: R$@totalPrice
+        </p>
+        <p>
+            <button onclick="RemoveCart()">Esvaziar carrinho</button>
+        </p>
+
+        if (Model == true)
+        {
+            <p>
+                <form>
+                    <button id="checkoutButton" type="submit" asp-controller="Home" asp-action="Checkout">Finalizar compra</button>
+                </form>
+            </p>
+        }
+    }
+    else
+    {
+        <p>Carrinho vazio</p>
+    }
+}
