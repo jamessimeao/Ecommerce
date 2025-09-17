@@ -51,19 +51,19 @@ O carrinho pode ser modificado clicando nos botões de "Adicionar ao carrinho", 
 
 Os modelos principais são Product e CartEntry. O Product tem as seguintes propriedades:
 
-* int Id;
+* uint Id;
 * string Name;
 * Decimal Price;
-* int CategoryId;
-* int SubcategoryId;
+* uint CategoryId;
+* uint SubcategoryId;
 * string ImagePath.
 
 O site somente utilizou as propriedades Id, Name, Price e ImagePath. As demais propriedades ainda não foram utilizadas, mas permitem organizar melhor os produtos. Todas informações do produto são guardadas no banco de dados, com exceção da imagem. A propriedade ImagePath guarda a localização da imagem do produto no servidor. As imagens dos produtos estão sendo guardadas na pasta wwwroot/img.
 
 O modelo CartEntry tem as seguintes propriedades:
 
-* int Quantity;
-* int ProductId.
+* uint Quantity;
+* uint ProductId.
 
 Ou seja, guarda a Id de um produto e uma quantidade. Essa Id é informação suficiente para obter as demais informações do produto, sendo necessário para isso fazer uma query no banco de dados para obter tais informações.
 
