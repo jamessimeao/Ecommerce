@@ -15,17 +15,17 @@ namespace Ecommerce.Data.Dapper
             return products;
         }
 
-        public static async Task<IEnumerable<Product>> GetFirstProducts(IDbConnection dbConnection, ulong quantity)
+        public static async Task<IEnumerable<Product>> GetFirstProducts(IDbConnection dbConnection, uint quantity)
         {
             string sql = $"SELECT id, name, price, categoryId, subcategoryId, imagePath FROM products ORDER BY id LIMIT {quantity}";
             IEnumerable<Product> products = await dbConnection.QueryAsync<Product>(sql);
             return products;
         }
 
-        public static async Task<IEnumerable<Product>> GetProductsFromIds(IDbConnection dbConnection, IEnumerable<int> productIds)
+        public static async Task<IEnumerable<Product>> GetProductsFromIds(IDbConnection dbConnection, IEnumerable<uint> productIds)
         {
             string idsSequence = "";
-            foreach (int id in productIds)
+            foreach (uint id in productIds)
             {
                 idsSequence += id + ",";
             }
@@ -90,7 +90,7 @@ namespace Ecommerce.Data.Dapper
         }
 
         [Authorize]
-        public static async Task RemoveFromUserCart(IDbConnection dbConnection, string userId, ulong productId)
+        public static async Task RemoveFromUserCart(IDbConnection dbConnection, string userId, uint productId)
         {
             // Should be careful with userId, which is susceptible to sql injection.
 

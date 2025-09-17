@@ -2,8 +2,8 @@
 {
     public class Subcategory
     {
-        public int Id { get; set; }
+        public uint Id { get; set; }
         public required string Name { get; set; }
-        public int CategoryId { get; set; }
+        public uint CategoryId { get; set; }
     }
 }

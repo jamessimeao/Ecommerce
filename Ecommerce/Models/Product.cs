@@ -4,11 +4,11 @@ namespace Ecommerce.Models
 {
     public class Product
     {
-        public int Id { get; set; }
+        public uint Id { get; set; }
         public required string Name { get; set; }
         public Decimal Price { get; set; }
-        public int CategoryId { get; set; }
-        public int SubcategoryId { get; set; }
+        public uint CategoryId { get; set; }
+        public uint SubcategoryId { get; set; }
         public required string ImagePath { get; set; }
 
         public override string ToString()

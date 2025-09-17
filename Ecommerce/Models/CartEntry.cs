@@ -5,8 +5,8 @@
     // but that turns the interaction with the database more difficult.
     public class CartEntry
     {
-        public int Quantity { get; set; }
-        public int ProductId { get; set; }
+        public uint Quantity { get; set; }
+        public uint ProductId { get; set; }
  
         public override string ToString()
         {
