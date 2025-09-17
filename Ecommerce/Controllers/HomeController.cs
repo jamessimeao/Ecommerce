@@ -1,24 +1,41 @@
-using System.Diagnostics;
+using Ecommerce.Data.Dapper;
 using Ecommerce.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using System.Diagnostics;
 
 namespace Ecommerce.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IDbConnection _dbConnection;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IDbConnection dbConnection)
         {
             _logger = logger;
+            _dbConnection = dbConnection;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index([FromQuery] string query)
         {
-            return View();
+            IEnumerable<Product> products;
+            if (query == null)
+            {
+                products = await DataManipulation.GetAllProducts(_dbConnection);
+            }
+            else
+            {
+                products = await DataManipulation.SearchForProduct(_dbConnection,query);
+            }
+
+            return View(products);
         }
 
-        public IActionResult Privacy()
+        [Authorize]
+        [HttpGet]
+        public IActionResult Checkout()
         {
             return View();
         }
