@@ -1,12 +1,12 @@
-﻿async function addToCart(quantity, productId) {
+﻿async function addToCart(createCheckoutButton, quantity, productId) {
+    const createCheckoutButtonTypeIsCorrect = (typeof (createCheckoutButton) === 'boolean');
     const quantityTypeIsCorrect = Number.isInteger(quantity) && quantity >= 1;
     const productIdTypeIsCorrect = Number.isInteger(productId) && productId >= 1;
     // Note that the if part won't execute if quantity=0,
     // which avoids calling the backend.
-    if (quantityTypeIsCorrect && productIdTypeIsCorrect)
-    {
-        
-        const jsonToSend = JSON.stringify({"quantity": quantity,"productId": productId});
+    if (createCheckoutButtonTypeIsCorrect && quantityTypeIsCorrect && productIdTypeIsCorrect) {
+
+        const jsonToSend = JSON.stringify({ "createCheckoutButton": createCheckoutButton, "quantity": quantity, "productId": productId });
         const request = new Request("/UserCart/Add",
             {
                 method: "POST",
@@ -32,19 +32,26 @@
     }
     else {
         console.log("The following inputs of addToCart have incorrect types:");
-        if (quantityTypeIsCorrect == false) console.log(`quantity = ${quantity}`);
-        if (productIdTypeIsCorrect == false) console.log(`productId = ${productId}`);
+        if (createCheckoutButtonTypeIsCorrect === false) console.log(`createCheckoutButton = ${createCheckoutButton}`);
+        if (quantityTypeIsCorrect === false) console.log(`quantity = ${quantity}`);
+        if (productIdTypeIsCorrect === false) console.log(`productId = ${productId}`);
     }
 }
 
-async function RemoveFromCart(productId) {
+async function RemoveFromCart(createCheckoutButton, productId) {
+    const createCheckoutButtonTypeIsCorrect = (typeof (createCheckoutButton) === 'boolean');
     const productIdTypeIsCorrect = Number.isInteger(productId) && productId >= 1;
-    if (productIdTypeIsCorrect) {
-        const request = new Request(`/UserCart/RemoveSingleProduct/${productId}`,
+    if (createCheckoutButtonTypeIsCorrect && productIdTypeIsCorrect) {
+        const jsonToSend = JSON.stringify({ "createCheckoutButton": createCheckoutButton, "productId": productId });
+        const request = new Request("/UserCart/RemoveSingleProduct",
             {
                 method: "DELETE",
-            }
-        );
+                headers:
+                {
+                    "Content-Type": "application/json",
+                },
+                body: jsonToSend,
+            });
         try {
             const response = await fetch(request);
             if (!response.ok) {
@@ -57,6 +64,11 @@ async function RemoveFromCart(productId) {
         catch (error) {
             console.log("Error:", error);
         }
+    }
+    else {
+        console.log("The following inputs of RemoveFromCart have incorrect types:");
+        if (createCheckoutButtonTypeIsCorrect === false) console.log(`createCheckoutButton = ${createCheckoutButton}`);
+        if (productIdTypeIsCorrect === false) console.log(`productId = ${productId}`);
     }
 }
 
