@@ -27,23 +27,23 @@ O ASP.NET Core Identity é utilizado para dar as funcionalidades de criar usuár
 
 A página inicial mostra todos produtos da loja:
 
-<img width="1920" height="1623" alt="home" src="https://github.com/user-attachments/assets/a0ae83de-d2a0-4b0a-b73e-1ca6ead13724" />
+<img width="1920" height="1623" alt="home" src="https://github.com/user-attachments/assets/d12e85db-befc-4e84-97a0-0e60195435b9" />
 
 Há uma barra para pesquisar por produtos. Se pesquisamos por ki, são mostrados todos produtos com "ki" no nome.
 
-<img width="1920" height="878" alt="search" src="https://github.com/user-attachments/assets/e7bcd749-2835-48dc-8e18-20e8e4593e70" />
+<img width="1920" height="878" alt="pesquisar" src="https://github.com/user-attachments/assets/7e744d60-21ff-452a-8986-7a055570472b" />
 
 Ao clicar em Entrar somos direcionados à página de login, que vem do ASP.NET Core Identity:
 
-<img width="1920" height="878" alt="login" src="https://github.com/user-attachments/assets/8725cc6d-9f6c-4915-91c4-6e696fdf8c0a" />
+<img width="1920" height="878" alt="login" src="https://github.com/user-attachments/assets/1cfdf632-fd79-4084-b4f6-efba37d5248a" />
 
 Depois do usuário estar logado, a página inicial passa a mostrar o carrinho dele no canto direito da página:
 
-<img width="1920" height="2342" alt="home-cart" src="https://github.com/user-attachments/assets/acc4ac52-a98d-4be6-a5e2-d86805f269b6" />
+<img width="1920" height="2342" alt="carrinho" src="https://github.com/user-attachments/assets/1509bf7c-7a78-46dd-9e89-adc5378de69f" />
 
 O carrinho pode ser modificado clicando nos botões de "Adicionar ao carrinho", "Remover" ou "Esvaziar carrinho". Clicar nesses botões modifica a página, atualizando o carrinho, mas sem recarregá-la. Ao clicar no botão "Finalizar compra", o usuário é levado a uma página de Checkout. Esta página só mostra o carrinho do usuário:
 
-<img width="1920" height="2236" alt="checkout" src="https://github.com/user-attachments/assets/83058f93-d098-4589-bbd1-d28076a11137" />
+<img width="1920" height="2236" alt="checkout" src="https://github.com/user-attachments/assets/7ed327bf-3371-4ee1-8324-2cd848f4eea4" />
 
 # Estrutura do projeto
 
