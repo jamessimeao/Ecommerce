@@ -1,0 +1,13 @@
+﻿aside {
+    border-left: 1px solid #dadada;
+}
+
+.cart {
+    padding: 1rem;
+    text-align: center;
+    width: 250px;
+}
+
+.total-price {
+    font-weight: bold;
+}
