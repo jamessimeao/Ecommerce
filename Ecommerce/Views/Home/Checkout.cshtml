@@ -1,0 +1,12 @@
+﻿@{
+	ViewData["Title"] = "Finalizar compra";
+	ViewData["Description"] = "Página de finalizar compra";
+}
+
+<h1>Finalizar compra</h1>
+
+<section id="cart" class="cart">
+	@await Component.InvokeAsync("Cart",false)
+</section>
+
+<script src="~/js/cart.js"></script>
