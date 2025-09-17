@@ -4,6 +4,8 @@ using Ecommerce.Models;
 using Ecommerce.Data.Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Ecommerce.Services;
+using Humanizer;
+using Ecommerce.DTOs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,13 +22,14 @@ namespace Ecommerce.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] CartEntry cartEntry)
+        public async Task<IActionResult> Add([FromBody] CartEntryRequest dto)
         {
-            if(cartEntry != null)
+            if (dto.Quantity >= 1 && dto.ProductId >= 1)
             {
+                CartEntry cartEntry = new CartEntry { Quantity = dto.Quantity, ProductId = dto.ProductId };
                 string userId = UserInfo.GetUserId(User);
                 await DataManipulation.AddToUserCart(_dbConnection, userId, cartEntry);
-                return ViewComponent("Cart",true);
+                return ViewComponent("Cart", dto.CreateCheckoutButton);
             }
             else
             {
@@ -36,14 +39,14 @@ namespace Ecommerce.Controllers
 
         [Authorize]
         [HttpDelete]
-        public async Task<IActionResult> RemoveSingleProduct(ulong id)
+        public async Task<IActionResult> RemoveSingleProduct([FromBody] CartEntryRequest dto)
         {
             // In this case, id is the id of the product, which should be >= 1
-            if (id >= 1)
+            if (dto.ProductId >= 1)
             {
                 string userId = UserInfo.GetUserId(User);
-                await DataManipulation.RemoveFromUserCart(_dbConnection, userId, id);
-                return ViewComponent("Cart", true);
+                await DataManipulation.RemoveFromUserCart(_dbConnection, userId, dto.ProductId);
+                return ViewComponent("Cart", dto.CreateCheckoutButton);
             }
             else
             {
@@ -57,7 +60,7 @@ namespace Ecommerce.Controllers
         {
             string userId = UserInfo.GetUserId(User);
             await DataManipulation.RemoveUserCart(_dbConnection, userId);
-            return ViewComponent("Cart", true);
+            return ViewComponent("Cart", false);
         }
     }
 }
