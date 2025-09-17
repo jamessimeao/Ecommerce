@@ -58,7 +58,7 @@ Os modelos principais são Product e CartEntry. O Product tem as seguintes propr
 * uint SubcategoryId;
 * string ImagePath.
 
-O site somente utilizou as propriedades Id, Name, Price e ImagePath. As demais propriedades ainda não foram utilizadas, mas permitem organizar melhor os produtos. Todas informações do produto são guardadas no banco de dados, com exceção da imagem. A propriedade ImagePath guarda a localização da imagem do produto no servidor. As imagens dos produtos estão sendo guardadas na pasta wwwroot/img.
+O site somente utilizou as propriedades Id, Name, Price e ImagePath. As demais propriedades ainda não foram utilizadas, mas permitem organizar melhor os produtos. Todas informações do produto são guardadas no banco de dados, com exceção da imagem. A propriedade ImagePath guarda a localização da imagem do produto no servidor. As imagens dos produtos estão sendo guardadas na pasta wwwroot/img, mas elas não estão presentes no repositório para não violar direitos autorais.
 
 O modelo CartEntry tem as seguintes propriedades:
 
