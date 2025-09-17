@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="~/css/cart.css" />
     string userId = UserInfo.GetUserId(User);
     IEnumerable<CartEntry> cart = await DataManipulation.GetUserCart(dbConnection, userId);
-    List<int> productIds = [];
-    List<int> quantities = [];
+    List<uint> productIds = [];
+    List<uint> quantities = [];
     foreach (CartEntry cartEntry in cart)
     {
         productIds.Add(cartEntry.ProductId);
