@@ -2,13 +2,16 @@
 @{
     ViewData["Title"] = "Página inicial";
     ViewData["Description"] = "Página inicial da loja online";
+
+    IEnumerable<Product> products;
+    products = Model;
 }
 
 <div class="home-div">
     <div class="product-search">
         <form method="get" class="search-form">
             <label>Procurar produto: </label>
-            <input class="search-bar" name="query" type="text" autocomplete="on" required>
+            <input id="search-bar" class="search-bar" name="query" type="text" autocomplete="on" required onchange="sanitize_input()">
             <button type="submit" asp-controller="Home" asp-action="Index">Pesquisar</button>
         </form>
 
@@ -18,7 +21,7 @@
                 string buttonAddToCartId(int index) => "buttonAddToCart_" + index;
 
                 int index = 0;
-                foreach (Product product in Model)
+                foreach (Product product in products)
                 {
                     string inputIdIndex = inputQuantityId(index);
                     <div class="product">
@@ -51,9 +54,21 @@
             }
         </section>
     </div>
+    
     <aside id="cart" class="cart">
-        @await Component.InvokeAsync("Cart",true)
+        @await Component.InvokeAsync("Cart", new {createCheckoutButton = true, user = User})
     </aside>
 </div>
 
 <script src="~/js/cart.js"></script>
+<script>
+    // Remove not allowed character from search bar input
+    function sanitize_input(){
+        const searchBar = document.getElementById("search-bar");
+        // Keep only letters and spaces
+        sanitizedString = searchBar.value.replace(/[^a-zA-Z\s]/g,"");
+        // Limit the string to 100 characters
+        sanitizedString = sanitizedString.substring(0,100);
+        searchBar.value = sanitizedString;
+    }
+</script>
