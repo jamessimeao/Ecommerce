@@ -92,7 +92,7 @@ A ação Checkout do HomeController e todas as ações do UserCartController nec
 
 Para o controller Home há views Index e Checkout. Index é a página inicial e Checkout a página de finalizar compra. A página inicial permite ver os produtos da loja e adicioná-los ou removê-los do carrinho. A página de checkout somente mostra quais produtos há no carrinho.
 
-Há também uma view component para o carrinho, localizada em Views/Shared/Components/Cart/Default.cshtml e ViewComponents/CartViewComponent.cs. A view component permite reutilizar o mesmo código em diferentes views. A view component do carrinho é utilizada em ambas views Index e Checkout. É utilizada uma view component no lugar de uma partial view para poder passar parâmetros para ela sem precisar de uma view. Isso é importante ao retornar a view component no UserCartController. A view component do carrinho recebe como parâmetro um bool createCheckoutButton, para decidir se deve criar o botão de "Finalizar compra". Este botão é necessário na página Index, mas não em Checkout.
+Há também uma view component para o carrinho, localizada em Views/Shared/Components/Cart/Default.cshtml e ViewComponents/CartViewComponent.cs. A view component permite reutilizar o mesmo código em diferentes views. A view component do carrinho é utilizada em ambas views Index e Checkout. É utilizada uma view component no lugar de uma partial view para poder passar parâmetros para ela sem precisar de uma view.
 
 Outras views foram geradas automaticamente pelo ASP.NET MVC ou ASP.NET Core Identity.
 
