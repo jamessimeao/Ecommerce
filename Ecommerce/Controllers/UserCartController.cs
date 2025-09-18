@@ -11,6 +11,7 @@ using Ecommerce.DTOs;
 
 namespace Ecommerce.Controllers
 {
+    [Authorize]
     public class UserCartController : Controller
     {
         private readonly IDbConnection _dbConnection;
@@ -20,7 +21,6 @@ namespace Ecommerce.Controllers
             _dbConnection = dbConnection;
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CartEntryRequest dto)
         {
@@ -28,16 +28,16 @@ namespace Ecommerce.Controllers
             {
                 CartEntry cartEntry = new CartEntry { Quantity = dto.Quantity, ProductId = dto.ProductId };
                 string userId = UserInfo.GetUserId(User);
-                await DataManipulation.AddToUserCart(_dbConnection, userId, cartEntry);
-                return ViewComponent("Cart", dto.CreateCheckoutButton);
+                bool succeded = await DataManipulation.AddToUserCart(_dbConnection, userId, cartEntry);
+                if (succeded)
+                {
+                    return ViewComponent("Cart", new { createCheckoutButton = dto.CreateCheckoutButton, user = User });
+                }
             }
-            else
-            {
-                return BadRequest();
-            }
+
+            return BadRequest();
         }
 
-        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> RemoveSingleProduct([FromBody] CartEntryRequest dto)
         {
@@ -45,22 +45,27 @@ namespace Ecommerce.Controllers
             if (dto.ProductId >= 1)
             {
                 string userId = UserInfo.GetUserId(User);
-                await DataManipulation.RemoveFromUserCart(_dbConnection, userId, dto.ProductId);
-                return ViewComponent("Cart", dto.CreateCheckoutButton);
+                bool succeded = await DataManipulation.RemoveFromUserCart(_dbConnection, userId, dto.ProductId);
+                if (succeded)
+                {
+                    return ViewComponent("Cart", new { createCheckoutButton = dto.CreateCheckoutButton, user = User });
+                }
             }
-            else
-            {
-                return BadRequest();
-            }
+                
+            return BadRequest();
         }
 
-        [Authorize]
         [HttpDelete]
         public async Task<IActionResult> RemoveAllProducts()
         {
             string userId = UserInfo.GetUserId(User);
-            await DataManipulation.RemoveUserCart(_dbConnection, userId);
-            return ViewComponent("Cart", false);
+            bool succeded  = await DataManipulation.RemoveUserCart(_dbConnection, userId);
+            if (succeded)
+            { 
+                return ViewComponent("Cart", new { createCheckoutButton = false, user = User });
+            }
+
+            return BadRequest();
         }
     }
 }

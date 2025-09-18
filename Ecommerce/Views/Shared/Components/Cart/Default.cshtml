@@ -5,28 +5,26 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject IDbConnection dbConnection
 
-@model bool
+@model Tuple<bool,IEnumerable<Tuple<uint,Product>>>
+@{
+    bool createCheckoutButton;
+    IEnumerable<Tuple<uint, Product>> detailedCart;
+    (createCheckoutButton, detailedCart) = Model;
+}
+
 
 @if (SignInManager.IsSignedIn(User))
 {
     <link rel="stylesheet" href="~/css/cart.css" />
-    string userId = UserInfo.GetUserId(User);
-    IEnumerable<CartEntry> cart = await DataManipulation.GetUserCart(dbConnection, userId);
-    List<uint> productIds = [];
-    List<uint> quantities = [];
-    foreach (CartEntry cartEntry in cart)
-    {
-        productIds.Add(cartEntry.ProductId);
-        quantities.Add(cartEntry.Quantity);
-    }
-    IEnumerable<Product> cartProducts = await DataManipulation.GetProductsFromIds(dbConnection, productIds);
-
     <h2>Carrinho</h2>
 
-    int i = 0;
+    int numberOfProducts = 0;
     Decimal totalPrice = 0;
-    foreach (Product product in cartProducts)
+    uint quantity;
+    Product product;
+    foreach (Tuple<uint, Product> tuple in detailedCart)
     {
+        (quantity, product) = tuple;
         <div class="product">
             <img class="product-img" src="@product.ImagePath" alt="imagem do produto" width="100" />
             <p>
@@ -36,17 +34,17 @@
                 Preço unitário: R$@product.Price
             </p>
             <p>
-                Quantidade: @quantities[i]
+                Quantidade: @quantity
             </p>
             <p>
-                <button onclick="RemoveFromCart(@Json.Serialize(Model),@product.Id)">Remover</button>
+                <button onclick="RemoveFromCart(@Json.Serialize(createCheckoutButton),@product.Id)">Remover</button>
             </p>
         </div>
-        totalPrice += quantities[i] * product.Price;
-        i++;
+        totalPrice += quantity * product.Price;
+        numberOfProducts++;
     }
     @*Only enable Esvaziar carrinho and Finalizar compra buttons if there are items in the cart*@
-    @if (i > 0)
+    @if (numberOfProducts > 0)
     {
         <p class="total-price">
             Preço Total: R$@totalPrice
@@ -55,7 +53,7 @@
             <button onclick="RemoveCart()">Esvaziar carrinho</button>
         </p>
 
-        if (Model == true)
+        if (createCheckoutButton)
         {
             <p>
                 <form>

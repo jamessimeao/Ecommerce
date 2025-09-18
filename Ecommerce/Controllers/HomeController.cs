@@ -12,7 +12,10 @@ namespace Ecommerce.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IDbConnection _dbConnection;
 
-        public HomeController(ILogger<HomeController> logger, IDbConnection dbConnection)
+        public HomeController(
+            ILogger<HomeController> logger,
+            IDbConnection dbConnection
+            )
         {
             _logger = logger;
             _dbConnection = dbConnection;
@@ -21,16 +24,24 @@ namespace Ecommerce.Controllers
         public async Task<IActionResult> Index([FromQuery] string query)
         {
             IEnumerable<Product> products;
+            bool succededGettingProducts = true;
             if (query == null)
             {
                 products = await DataManipulation.GetAllProducts(_dbConnection);
             }
             else
             {
-                products = await DataManipulation.SearchForProduct(_dbConnection,query);
+                (products,succededGettingProducts) = await DataManipulation.SearchForProduct(_dbConnection,query);
             }
 
-            return View(products);
+            if (succededGettingProducts)
+            {
+                return View(products);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [Authorize]
