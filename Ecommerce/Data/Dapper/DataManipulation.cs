@@ -3,11 +3,26 @@ using Ecommerce.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.CodeAnalysis;
 using System.Data;
+using System.Data.Common;
+using System.Text.RegularExpressions;
 
 namespace Ecommerce.Data.Dapper
 {
-    public static class DataManipulation
+    public static partial class DataManipulation
     {
+        private const uint MAX_STRING_SIZE = 100;
+
+        // Any string with alphanumeric characters or -
+        [GeneratedRegex(@"^[\w-\s]*$")] 
+        private static partial Regex MyRegex();
+
+        // A string is considered safe if it can't lead to sql injection when inserted in sql as 'str'.
+        // That is, if PostgreSQL will treat str as a string, not as code.
+        public static bool IsSafe(string str)
+        {
+            return (str != null && str.Length <= MAX_STRING_SIZE && MyRegex().IsMatch(str));
+        }
+
         public static async Task<IEnumerable<Product>> GetAllProducts(IDbConnection dbConnection)
         {
             string sql = "SELECT id, name, price, categoryId, subcategoryId, imagePath FROM products ORDER BY id";
@@ -40,14 +55,12 @@ namespace Ecommerce.Data.Dapper
             return products;
         }
 
-        public static async Task<IEnumerable<Product>> SearchForProduct(IDbConnection dbConnection, string query)
+        public static async Task<(IEnumerable<Product>,bool)> SearchForProduct(IDbConnection dbConnection, string query)
         {
-            // The input query may lead to sql injection or other attacks!
-
-            if (query != null && query.Length > 0)
+            if (query != null && query.Length > 0 && IsSafe(query))
             {
-                // Do a simple search, just for testing
-                // A query like "abc def" will be replaced by the pattern "%abc% %def%"
+                // Do a simple search, just for testing.
+                // A query like "abc def" will be replaced by the pattern "%abc% %def%".
                 string[] substrings = query.Split(' ');
                 string pattern = "";
                 foreach (string substring in substrings)
@@ -59,54 +72,113 @@ namespace Ecommerce.Data.Dapper
 
                 string sql = $"SELECT * FROM products WHERE name LIKE '{pattern}'";
                 IEnumerable<Product> products = await dbConnection.QueryAsync<Product>(sql);
-                return products;
+                return (products, true);
             }
             else
             {
-                return [];
+                return ([], false);
             }
         }
 
         [Authorize]
-        public static async Task<IEnumerable<CartEntry>> GetUserCart(IDbConnection dbConnection, string userId)
+        public static async Task<(IEnumerable<CartEntry>,bool)> GetUserCart(IDbConnection dbConnection, string userId)
         {
-            // Should be careful with userId, which is susceptible to sql injection.
-
-            string sql = $"SELECT quantity AS \"Quantity\",productId AS \"ProductId\" FROM cartentries WHERE userId='{userId}' ORDER BY productId";
-            IEnumerable<CartEntry> cart = await dbConnection.QueryAsync<CartEntry>(sql);
-            return cart;
+            IEnumerable<CartEntry> cart = [];
+            if (userId != null && IsSafe(userId))
+            {
+                string sql = $"SELECT quantity AS \"Quantity\",productId AS \"ProductId\" FROM cartentries WHERE userId='{userId}' ORDER BY productId";
+                cart = await dbConnection.QueryAsync<CartEntry>(sql);
+            }
+            return (cart, true);
         }
 
         [Authorize]
-        public static async Task AddToUserCart(IDbConnection dbConnection, string userId, CartEntry cartEntry)
+        public static async Task<(IEnumerable<Tuple<uint,Product>>, bool)> GetUserDetailedCart(IDbConnection dbConnection, string userId)
         {
-            // Should be careful with userId, which is susceptible to sql injection.
+            // Get cart, which only has quantities and product ids
+            bool succededGettingCart;
+            IEnumerable<CartEntry> cart;
+            (cart, succededGettingCart) = await DataManipulation.GetUserCart(dbConnection, userId);
+            if (succededGettingCart)
+            {
+                // Get the products
+                List<uint> productIds = [];
+                List<uint> quantities = [];
+                uint numberOfProducts = 0;
+                foreach (CartEntry cartEntry in cart)
+                {
+                    productIds.Add(cartEntry.ProductId);
+                    quantities.Add(cartEntry.Quantity);
+                    numberOfProducts++;
+                }
+                IEnumerable<Product> cartProducts = await DataManipulation.GetProductsFromIds(dbConnection, productIds);
 
-            // If the user don't have the product in the cart,
-            // add a new row to the cartentries table with que new product and quantity.
-            // Else just add the new quantity to the old quantity.
-            string sql = $"INSERT INTO cartentries (userId,productId,quantity) VALUES('{userId}',{cartEntry.ProductId},{cartEntry.Quantity}) ON CONFLICT (userId,productId) DO UPDATE SET quantity=cartentries.quantity+EXCLUDED.quantity";
-            await dbConnection.ExecuteAsync(sql);
+                // Make the detaileCart, which stores all information of a product, not only its id
+                List<Tuple<uint, Product>> detailedCart = [];
+                int i = 0;
+                foreach(Product product in cartProducts)
+                {
+                    detailedCart.Add(new Tuple<uint,Product>(quantities[i],product));
+                    i++;
+                }
+
+                return (detailedCart, true);
+            }
+
+            return ([], false);
         }
 
         [Authorize]
-        public static async Task RemoveFromUserCart(IDbConnection dbConnection, string userId, uint productId)
+        public static async Task<bool> AddToUserCart(IDbConnection dbConnection, string userId, CartEntry cartEntry)
         {
-            // Should be careful with userId, which is susceptible to sql injection.
 
-            // Delete the row from the cartentries table with the specified product for the user.
-            string sql = $"DELETE FROM cartentries WHERE userId='{userId}' AND productId={productId}";
-            await dbConnection.ExecuteAsync(sql);
+            if (userId != null && IsSafe(userId))
+            {
+                // If the user don't have the product in the cart,
+                // add a new row to the cartentries table with que new product and quantity.
+                // Else just add the new quantity to the old quantity.
+                string sql = $"INSERT INTO cartentries (userId,productId,quantity) VALUES('{userId}',{cartEntry.ProductId},{cartEntry.Quantity}) ON CONFLICT (userId,productId) DO UPDATE SET quantity=cartentries.quantity+EXCLUDED.quantity";
+                await dbConnection.ExecuteAsync(sql);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         [Authorize]
-        public static async Task RemoveUserCart(IDbConnection dbConnection, string userId)
+        public static async Task<bool> RemoveFromUserCart(IDbConnection dbConnection, string userId, uint productId)
         {
-            // Should be careful with userId, which is susceptible to sql injection.
 
-            // Remove every row of the cartentries table for the specified user.
-            string sql = $"DELETE FROM cartentries WHERE userId='{userId}'";
-            await dbConnection.ExecuteAsync(sql);
+            if (userId != null && IsSafe(userId))
+            {
+                // Delete the row from the cartentries table with the specified product for the user.
+                string sql = $"DELETE FROM cartentries WHERE userId='{userId}' AND productId={productId}";
+                await dbConnection.ExecuteAsync(sql);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        [Authorize]
+        public static async Task<bool> RemoveUserCart(IDbConnection dbConnection, string userId)
+        {
+
+            if (userId != null && IsSafe(userId))
+            {
+                // Remove every row of the cartentries table for the specified user.
+                string sql = $"DELETE FROM cartentries WHERE userId='{userId}'";
+                await dbConnection.ExecuteAsync(sql);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
