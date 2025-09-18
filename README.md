@@ -67,8 +67,6 @@ O modelo CartEntry tem as seguintes propriedades:
 
 Ou seja, guarda a Id de um produto e uma quantidade. Essa Id é informação suficiente para obter as demais informações do produto, sendo necessário para isso fazer uma query no banco de dados para obter tais informações.
 
-Não há um modelo para o carrinho de compras. O carrinho é guardado no C# como uma coleção de objetos da classe CartEntry.
-
 Foram feitos modelos Category e Subcategory, mas ainda não foram utilizados no site. Há também o ErrorViewModel, que é gerado automaticamente pelo ASP.NET MVC.
 
 ## Controllers
