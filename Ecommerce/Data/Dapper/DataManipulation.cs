@@ -70,7 +70,7 @@ namespace Ecommerce.Data.Dapper
                 // Remove last space character
                 pattern = pattern[..^1];
 
-                string sql = $"SELECT * FROM products WHERE name LIKE '{pattern}'";
+                string sql = $"SELECT * FROM products WHERE name ILIKE '{pattern}'";
                 IEnumerable<Product> products = await dbConnection.QueryAsync<Product>(sql);
                 return (products, true);
             }
