@@ -67,8 +67,6 @@ O modelo CartEntry tem as seguintes propriedades:
 
 Ou seja, guarda a Id de um produto e uma quantidade. Essa Id é informação suficiente para obter as demais informações do produto, sendo necessário para isso fazer uma query no banco de dados para obter tais informações.
 
-Não há um modelo para o carrinho de compras. O carrinho é guardado no C# como uma coleção de objetos da classe CartEntry.
-
 Foram feitos modelos Category e Subcategory, mas ainda não foram utilizados no site. Há também o ErrorViewModel, que é gerado automaticamente pelo ASP.NET MVC.
 
 ## Controllers
@@ -94,7 +92,7 @@ A ação Checkout do HomeController e todas as ações do UserCartController nec
 
 Para o controller Home há views Index e Checkout. Index é a página inicial e Checkout a página de finalizar compra. A página inicial permite ver os produtos da loja e adicioná-los ou removê-los do carrinho. A página de checkout somente mostra quais produtos há no carrinho.
 
-Há também uma view component para o carrinho, localizada em Views/Shared/Components/Cart/Default.cshtml e ViewComponents/CartViewComponent.cs. A view component permite reutilizar o mesmo código em diferentes views. A view component do carrinho é utilizada em ambas views Index e Checkout. É utilizada uma view component no lugar de uma partial view para poder passar parâmetros para ela sem precisar de uma view. Isso é importante ao retornar a view component no UserCartController. A view component do carrinho recebe como parâmetro um bool createCheckoutButton, para decidir se deve criar o botão de "Finalizar compra". Este botão é necessário na página Index, mas não em Checkout.
+Há também uma view component para o carrinho, localizada em Views/Shared/Components/Cart/Default.cshtml e ViewComponents/CartViewComponent.cs. A view component permite reutilizar o mesmo código em diferentes views. A view component do carrinho é utilizada em ambas views Index e Checkout. É utilizada uma view component no lugar de uma partial view para poder passar parâmetros para ela sem precisar de uma view.
 
 Outras views foram geradas automaticamente pelo ASP.NET MVC ou ASP.NET Core Identity.
 
@@ -113,6 +111,10 @@ O ASP.NET Core Identity, responsável pelos usuários e função de login, acess
 Esses métodos só permitem acessar ou modificar o carrinho de um usuário se estiver logado em sua conta.
 
 A maioria desse métodos têm queries simples. O método SearchForProduct é especial por ser responsável por procurar produtos relacionados a uma dada string. Ele foi feito para a página inicial mostrar os resultados da pesquisa por um produto. Para isso, esse método procura no banco de dados por produtos cujo nome contenha os mesmos termos enviados pela barra de pesquisa, na mesma ordem em que foram escritos. Nisto foi utilizado o operador LIKE do PostgreSQL, por ter um custo menor de processamento. Como exemplo, se na página inicial é pesquisado por "abc def ghi", a base de dados vai procurar por produtos cujo nome segue o padrão "%abc% %def% %ghi%". Ou seja, os termos "abc", "def" e "ghi" são interpretados como pedaços de palavras que aparecem no nome de um produto.
+
+## Prevenção contra SQL injection
+
+A barra de pesquisa na página inicial recebe uma string que é enviada para o servidor. Essa string é utilizada em queries ao banco de dados. Tendo vindo do cliente, isto introduz um risco de ataque do tipo SQL injection, em que o cliente envia strings com o intuito de executar queries próprias no banco de dados. Para evitar isso, antes de uma query ser feita ao banco de dados, quaisquer strings que são parâmetros dessas queries primeiro passam por testes para saber se são seguras. Somente são permitidas strings que não são nulas, não são muito longas e estão de acordo com uma expressão regular (regex). Do lado do servidor uma query insegura não é executada. Do lado do cliente é feita uma validação do input para que o cliente não escreva inputs inseguros. 
 
 ## Uso da API pelo frontend
 
