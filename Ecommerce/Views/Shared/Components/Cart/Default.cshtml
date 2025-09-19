@@ -1,9 +1,5 @@
-﻿@using System.Data
-@using Ecommerce.Data.Dapper
-@using Ecommerce.Services
-@using Microsoft.AspNetCore.Identity
+﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
-@inject IDbConnection dbConnection
 
 @model Tuple<bool,IEnumerable<Tuple<uint,Product>>>
 @{
