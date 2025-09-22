@@ -1,9 +1,8 @@
 ﻿using Dapper;
+using Ecommerce.DTOs;
 using Ecommerce.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.CodeAnalysis;
 using System.Data;
-using System.Data.Common;
 using System.Text.RegularExpressions;
 
 namespace Ecommerce.Data.Dapper
@@ -86,50 +85,23 @@ namespace Ecommerce.Data.Dapper
             IEnumerable<CartEntry> cart = [];
             if (userId != null && IsSafe(userId))
             {
-                string sql = $"SELECT quantity AS \"Quantity\",productId AS \"ProductId\" FROM cartentries WHERE userId='{userId}' ORDER BY productId";
-                cart = await dbConnection.QueryAsync<CartEntry>(sql);
+                string sql = $"SELECT cartentries.quantity AS \"Quantity\", products.id AS \"Id\", products.name AS \"Name\", products.price AS \"Price\", products.imagePath AS \"ImagePath\" FROM cartentries JOIN products ON cartentries.productId = products.id WHERE userId='{userId}' ORDER BY products.id";
+                cart = await dbConnection.QueryAsync<int, Product, CartEntry>(
+                    sql,
+                    // map a row into the a CartEntry object
+                    (int quantity, Product product) =>
+                    {
+                        return new CartEntry() { Quantity = (uint) quantity, Product = product };
+                    },
+                    // the Id column is the first with Product data
+                    splitOn: "Id"
+                );
             }
             return (cart, true);
         }
 
         [Authorize]
-        public static async Task<(IEnumerable<Tuple<uint,Product>>, bool)> GetUserDetailedCart(IDbConnection dbConnection, string userId)
-        {
-            // Get cart, which only has quantities and product ids
-            bool succededGettingCart;
-            IEnumerable<CartEntry> cart;
-            (cart, succededGettingCart) = await DataManipulation.GetUserCart(dbConnection, userId);
-            if (succededGettingCart)
-            {
-                // Get the products
-                List<uint> productIds = [];
-                List<uint> quantities = [];
-                uint numberOfProducts = 0;
-                foreach (CartEntry cartEntry in cart)
-                {
-                    productIds.Add(cartEntry.ProductId);
-                    quantities.Add(cartEntry.Quantity);
-                    numberOfProducts++;
-                }
-                IEnumerable<Product> cartProducts = await DataManipulation.GetProductsFromIds(dbConnection, productIds);
-
-                // Make the detaileCart, which stores all information of a product, not only its id
-                List<Tuple<uint, Product>> detailedCart = [];
-                int i = 0;
-                foreach(Product product in cartProducts)
-                {
-                    detailedCart.Add(new Tuple<uint,Product>(quantities[i],product));
-                    i++;
-                }
-
-                return (detailedCart, true);
-            }
-
-            return ([], false);
-        }
-
-        [Authorize]
-        public static async Task<bool> AddToUserCart(IDbConnection dbConnection, string userId, CartEntry cartEntry)
+        public static async Task<bool> AddToUserCart(IDbConnection dbConnection, string userId, CartEntryDTO cartEntry)
         {
 
             if (userId != null && IsSafe(userId))
