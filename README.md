@@ -15,7 +15,7 @@ Este projeto tem o objetivo de desenvolver habilidades em C# com ASP.NET Core, c
 Este projeto foi desenvolvido usando as seguintes tecnologias:
 
 * .NET 9;
-* ASP.NET MVC;
+* ASP.NET Core MVC;
 * ASP.NET Core Identity;
 * Banco de dados PostegreSQL;
 * Entity Framework;
