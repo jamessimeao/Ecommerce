@@ -24,22 +24,22 @@ namespace Ecommerce.ViewComponents
             _signInManager = signInManager;
         }
 
-        private async Task<IEnumerable<Tuple<uint, Product>>> GetDetailedCart(ClaimsPrincipal user)
+        private async Task<IEnumerable<CartEntry>> GetCart(ClaimsPrincipal user)
         {
-            IEnumerable<Tuple<uint, Product>> detailedCart = [];
+            IEnumerable<CartEntry> cart = [];
             if (_signInManager.IsSignedIn(user))
             {
                 string userId = UserInfo.GetUserId(user);
                 bool succededGettingCart;
-                (detailedCart, succededGettingCart) = await DataManipulation.GetUserDetailedCart(_dbConnection, userId);
+                (cart, succededGettingCart) = await DataManipulation.GetUserCart(_dbConnection, userId);
             }
-            return detailedCart;
+            return cart;
         }
 
         public async Task<IViewComponentResult> InvokeAsync(bool createCheckoutButton, ClaimsPrincipal user)
         {
-            IEnumerable<Tuple<uint, Product>> detailedCart = await GetDetailedCart(user);
-            Tuple<bool, IEnumerable<Tuple<uint, Product>>> model = new(createCheckoutButton, detailedCart);
+            IEnumerable<CartEntry> cart = await GetCart(user);
+            Tuple<bool, IEnumerable<CartEntry>> model = new(createCheckoutButton, cart);
             return View(model);
         }
     }

@@ -1,13 +1,12 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 
-@model Tuple<bool,IEnumerable<Tuple<uint,Product>>>
+@model Tuple<bool,IEnumerable<CartEntry>>
 @{
     bool createCheckoutButton;
-    IEnumerable<Tuple<uint, Product>> detailedCart;
-    (createCheckoutButton, detailedCart) = Model;
+    IEnumerable<CartEntry> cart;
+    (createCheckoutButton, cart) = Model;
 }
-
 
 @if (SignInManager.IsSignedIn(User))
 {
@@ -16,27 +15,24 @@
 
     int numberOfProducts = 0;
     Decimal totalPrice = 0;
-    uint quantity;
-    Product product;
-    foreach (Tuple<uint, Product> tuple in detailedCart)
+    foreach (CartEntry entry in cart)
     {
-        (quantity, product) = tuple;
         <div class="product">
-            <img class="product-img" src="@product.ImagePath" alt="imagem do produto" width="100" />
+            <img class="product-img" src="@entry.Product.ImagePath" alt="imagem do produto" width="100" />
             <p>
-                @product.Name
+                @entry.Product.Name
             </p>
             <p>
-                Preço unitário: R$@product.Price
+                Preço unitário: R$@entry.Product.Price
             </p>
             <p>
-                Quantidade: @quantity
+                Quantidade: @entry.Quantity
             </p>
             <p>
-                <button onclick="RemoveFromCart(@Json.Serialize(createCheckoutButton),@product.Id)">Remover</button>
+                <button onclick="RemoveFromCart(@Json.Serialize(createCheckoutButton),@entry.Product.Id)">Remover</button>
             </p>
         </div>
-        totalPrice += quantity * product.Price;
+        totalPrice += entry.Quantity * entry.Product.Price;
         numberOfProducts++;
     }
     @*Only enable Esvaziar carrinho and Finalizar compra buttons if there are items in the cart*@
