@@ -25,14 +25,14 @@ namespace Ecommerce.Data.Dapper
 
         public static async Task<IEnumerable<Product>> GetAllProducts(IDbConnection dbConnection)
         {
-            string sql = "SELECT id, name, price, categoryId, subcategoryId, imagePath FROM products ORDER BY id";
+            string sql = "SELECT id, name, price, imagePath FROM products ORDER BY id";
             IEnumerable<Product> products = await dbConnection.QueryAsync<Product>(sql);
             return products;
         }
 
         public static async Task<IEnumerable<Product>> GetFirstProducts(IDbConnection dbConnection, uint quantity)
         {
-            string sql = $"SELECT id, name, price, categoryId, subcategoryId, imagePath FROM products ORDER BY id LIMIT {quantity}";
+            string sql = $"SELECT id, name, price, imagePath FROM products ORDER BY id LIMIT {quantity}";
             IEnumerable<Product> products = await dbConnection.QueryAsync<Product>(sql);
             return products;
         }
@@ -49,7 +49,7 @@ namespace Ecommerce.Data.Dapper
             {
                 // eliminate the last comma
                 idsSequence = idsSequence.Substring(0, idsSequence.Length - 1);
-                string sql = $"SELECT id, name, price, categoryId, subcategoryId, imagePath FROM products WHERE id IN ({idsSequence}) ORDER BY id";
+                string sql = $"SELECT id, name, price, imagePath FROM products WHERE id IN ({idsSequence}) ORDER BY id";
                 products = await dbConnection.QueryAsync<Product>(sql);
             }
             return products;
