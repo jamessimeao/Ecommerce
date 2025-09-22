@@ -63,7 +63,7 @@ O modelo CartEntry tem as seguintes propriedades:
 * uint Quantity;
 * Product Product.
 
-Note que a propriedade Product é um objeto da classe Product. Esses dois modelos são suficientes para conseguir enviar as informações dos produtos e carrinho da base dados para o frontend.
+Note que a propriedade Product é um objeto da classe Product. O carrinho de um usuário é modelado como uma coleção de objetos da classe CartEntry. Esses dois modelos são suficientes para conseguir enviar as informações dos produtos e carrinho da base dados para o frontend. Para enviar informações sobre um carrinho para a base dados, não é necessário toda informação do Product, bastando os id's dos produtos. Por isso foi feito um DTO CartEntryDTO que guarda somente uma quantidade e o id de um produto.
 
 Qualquer outro modelo foi gerado automaticamente pelo ASP.NET Core.
 
