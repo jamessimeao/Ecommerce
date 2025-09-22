@@ -54,20 +54,18 @@ Os modelos principais são Product e CartEntry. O Product tem as seguintes propr
 * uint Id;
 * string Name;
 * Decimal Price;
-* uint CategoryId;
-* uint SubcategoryId;
 * string ImagePath.
 
-O site somente utilizou as propriedades Id, Name, Price e ImagePath. As demais propriedades ainda não foram utilizadas, mas permitem organizar melhor os produtos. Todas informações do produto são guardadas no banco de dados, com exceção da imagem. A propriedade ImagePath guarda a localização da imagem do produto no servidor. As imagens dos produtos estão sendo guardadas na pasta wwwroot/img, mas elas não estão presentes no repositório para não violar direitos autorais.
+Todas informações do produto são guardadas no banco de dados, com exceção da imagem. A propriedade ImagePath guarda a localização da imagem do produto no servidor. As imagens dos produtos estão sendo guardadas na pasta wwwroot/img, mas elas não estão presentes no repositório para não violar direitos autorais.
 
 O modelo CartEntry tem as seguintes propriedades:
 
 * uint Quantity;
-* uint ProductId.
+* Product Product.
 
-Ou seja, guarda a Id de um produto e uma quantidade. Essa Id é informação suficiente para obter as demais informações do produto, sendo necessário para isso fazer uma query no banco de dados para obter tais informações.
+Note que a propriedade Product é um objeto da classe Product.
 
-Foram feitos modelos Category e Subcategory, mas ainda não foram utilizados no site. Há também o ErrorViewModel, que é gerado automaticamente pelo ASP.NET MVC.
+Há também o ErrorViewModel, que é gerado automaticamente pelo ASP.NET MVC.
 
 ## Controllers
 
