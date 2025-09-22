@@ -1,6 +1,6 @@
 # Projeto de Loja Online
 
-Este projeto tem o objetivo de desenvolver habilidades em C# com ASP.NET, com foco em backend. Ele consiste numa loja online com as seguintes funcionalidades:
+Este projeto tem o objetivo de desenvolver habilidades em C# com ASP.NET Core, com foco em backend. Ele consiste numa loja online com as seguintes funcionalidades:
 
 * A página inicial mostra os produtos da loja, com imagem, nome e preço;
 * O cliente pode usar uma barra de pesquisa para procurar por algum produto específico;
