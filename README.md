@@ -41,7 +41,7 @@ Depois do usuário estar logado, a página inicial passa a mostrar o carrinho de
 
 <img width="1920" height="2342" alt="carrinho" src="https://github.com/user-attachments/assets/1509bf7c-7a78-46dd-9e89-adc5378de69f" />
 
-O carrinho pode ser modificado clicando nos botões de "Adicionar ao carrinho", "Remover" ou "Esvaziar carrinho". Clicar nesses botões modifica a página, atualizando o carrinho, mas sem recarregá-la. Ao clicar no botão "Finalizar compra", o usuário é levado a uma página de Checkout. Esta página só mostra o carrinho do usuário:
+O carrinho pode ser modificado clicando nos botões de "Adicionar ao carrinho", "Remover" ou "Esvaziar carrinho". Clicar nesses botões modifica a página, atualizando o carrinho, mas sem recarregá-la. Ao clicar no botão "Finalizar compra", o usuário é levado a uma página de checkout. Esta página só mostra o carrinho do usuário:
 
 <img width="1920" height="2236" alt="checkout" src="https://github.com/user-attachments/assets/7ed327bf-3371-4ee1-8324-2cd848f4eea4" />
 
