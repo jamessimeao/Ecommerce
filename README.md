@@ -92,7 +92,7 @@ Para o controller Home há views Index e Checkout. Index é a página inicial e 
 
 Há também uma view component para o carrinho, localizada em Views/Shared/Components/Cart/Default.cshtml e ViewComponents/CartViewComponent.cs. A view component permite reutilizar o mesmo código em diferentes views. A view component do carrinho é utilizada em ambas views Index e Checkout. É utilizada uma view component no lugar de uma partial view para poder passar parâmetros para ela sem precisar de uma view.
 
-Outras views foram geradas automaticamente pelo ASP.NET MVC ou ASP.NET Core Identity.
+Outras views foram geradas automaticamente pelo ASP.NET Core.
 
 ## Banco da dados
 
