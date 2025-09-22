@@ -63,9 +63,9 @@ O modelo CartEntry tem as seguintes propriedades:
 * uint Quantity;
 * Product Product.
 
-Note que a propriedade Product é um objeto da classe Product.
+Note que a propriedade Product é um objeto da classe Product. Esses dois modelos são suficientes para conseguir enviar as informações dos produtos e carrinho da base dados para o frontend.
 
-Há também o ErrorViewModel, que é gerado automaticamente pelo ASP.NET MVC.
+Qualquer outro modelo foi gerado automaticamente pelo ASP.NET Core.
 
 ## Controllers
 
