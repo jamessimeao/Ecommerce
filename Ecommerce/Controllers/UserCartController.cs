@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Data;
-using Ecommerce.Models;
 using Ecommerce.Data.Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Ecommerce.Services;
-using Humanizer;
 using Ecommerce.DTOs;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -22,11 +20,11 @@ namespace Ecommerce.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] CartEntryRequest dto)
+        public async Task<IActionResult> Add([FromBody] ClientRequestDTO dto)
         {
             if (dto.Quantity >= 1 && dto.ProductId >= 1)
             {
-                CartEntry cartEntry = new CartEntry { Quantity = dto.Quantity, ProductId = dto.ProductId };
+                CartEntryDTO cartEntry = new CartEntryDTO { Quantity = dto.Quantity, ProductId = dto.ProductId };
                 string userId = UserInfo.GetUserId(User);
                 bool succeded = await DataManipulation.AddToUserCart(_dbConnection, userId, cartEntry);
                 if (succeded)
@@ -39,7 +37,7 @@ namespace Ecommerce.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> RemoveSingleProduct([FromBody] CartEntryRequest dto)
+        public async Task<IActionResult> RemoveSingleProduct([FromBody] ClientRequestDTO dto)
         {
             // In this case, id is the id of the product, which should be >= 1
             if (dto.ProductId >= 1)
