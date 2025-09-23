@@ -74,11 +74,18 @@ Foram criados 2 controllers:
 * HomeController;
 * UserCartController.
 
-Ambos usam um mesmo padrão de rota, que é:
+Se for necessário enviar alguma informação, ela é enviada pela rota ou por uma query string. O HomeController utiliza as seguintes rotas:
 
-{controller}/{action}/
+/
+/Checkout
+/Error
 
-Se for necessário enviar alguma informação, ela é enviada por uma query string ou pelo corpo da requisição.
+Estas são as rotas do UserCartController:
+
+/UserCart/Add/productId/{productId}/quantity/{quantity}/createCheckoutButton/{createCheckoutButton}
+/UserCart/RemoveSingleProduct/productId/{productId}/createCheckoutButton/{createCheckoutButton}
+/UserCart/RemoveAllProducts
+
 
 O HomeController é responsável por retornar a página inicial e a página de checkout. Isto corresponde às ações Index e Checkout da classe. A ação Index recebe como entrada uma string query, que é o texto enviado pela barra de pesquisa. Se a página inicial for acessada sem usar a barra de pesquisa, tal query será null. Neste caso é retornada a página inicial com todos os produtos. Caso contrário, são selecionados produtos de acordo com a string query e é retornada a página com somente esses produtos.
 
