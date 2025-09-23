@@ -82,10 +82,6 @@ A ação Checkout do HomeController e todas as ações do UserCartController nec
 
 ### Métodos e Rotas
 
-A API é documentada usando Swagger. A documentação pode ser acessada na página /swagger.
-
-Se for necessário enviar alguma informação, ela é enviada pela rota ou por uma query string. 
-
 O HomeController utiliza os seguintes métodos e rotas:
 
 GET /
@@ -102,7 +98,9 @@ DELETE /UserCart/RemoveSingleProduct/productId/{productId}/createCheckoutButton/
 
 DELETE /UserCart/RemoveAllProducts
 
+Se for necessário enviar alguma informação, ela é enviada pela rota ou por uma query string.
 
+A API também é documentada usando Swagger. 
 
 ## Views
 
