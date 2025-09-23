@@ -102,6 +102,8 @@ Se for necessário enviar alguma informação, ela é enviada pela rota ou por u
 
 A API também é documentada usando Swagger. 
 
+<img width="1262" height="552" alt="swagger" src="https://github.com/user-attachments/assets/0b4787ec-94d0-4895-b9f5-ce9d1676da50" />
+
 ## Views
 
 Para o controller Home há views Index e Checkout. Index é a página inicial e Checkout a página de finalizar compra. A página inicial permite ver os produtos da loja e adicioná-los ou removê-los do carrinho. A página de checkout somente mostra quais produtos há no carrinho.
