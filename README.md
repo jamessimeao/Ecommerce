@@ -74,21 +74,23 @@ Foram criados 2 controllers:
 * HomeController;
 * UserCartController.
 
-Se for necessário enviar alguma informação, ela é enviada pela rota ou por uma query string. O HomeController utiliza as seguintes rotas:
+Se for necessário enviar alguma informação, ela é enviada pela rota ou por uma query string. A API é documentada usando Swagger. A documentação pode ser acessada na página /swagger.
 
-/
+O HomeController utiliza os seguintes métodos e rotas:
 
-/Checkout
+GET /
 
-/Error
+GET /Checkout
 
-Estas são as rotas do UserCartController:
+GET /Error
 
-/UserCart/Add/productId/{productId}/quantity/{quantity}/createCheckoutButton/{createCheckoutButton}
+Os métodos e rotas do UserCartController são:
 
-/UserCart/RemoveSingleProduct/productId/{productId}/createCheckoutButton/{createCheckoutButton}
+POST /UserCart/Add/productId/{productId}/quantity/{quantity}/createCheckoutButton/{createCheckoutButton}
 
-/UserCart/RemoveAllProducts
+DELETE /UserCart/RemoveSingleProduct/productId/{productId}/createCheckoutButton/{createCheckoutButton}
+
+DELETE /UserCart/RemoveAllProducts
 
 
 O HomeController é responsável por retornar a página inicial e a página de checkout. Isto corresponde às ações Index e Checkout da classe. A ação Index recebe como entrada uma string query, que é o texto enviado pela barra de pesquisa. Se a página inicial for acessada sem usar a barra de pesquisa, tal query será null. Neste caso é retornada a página inicial com todos os produtos. Caso contrário, são selecionados produtos de acordo com a string query e é retornada a página com somente esses produtos.
