@@ -73,8 +73,18 @@ Foram criados 2 controllers:
 
 * HomeController;
 * UserCartController.
+* 
+O HomeController é responsável por retornar a página inicial e a página de checkout. Isto corresponde às ações Index e Checkout da classe. A ação Index recebe como entrada uma string query, que é o texto enviado pela barra de pesquisa. Se a página inicial for acessada sem usar a barra de pesquisa, tal query será null. Neste caso é retornada a página inicial com todos os produtos. Caso contrário, são selecionados produtos de acordo com a string query e é retornada a página com somente esses produtos.
 
-Se for necessário enviar alguma informação, ela é enviada pela rota ou por uma query string. A API é documentada usando Swagger. A documentação pode ser acessada na página /swagger.
+O UserCartController é o controller responsável por receber requisições do cliente para manipular seu carrinho. Ele possui 3 ações: Add, RemoveSingleProduct e RemoveAllProducts. A ação Add adiciona uma quantidade de um único produto ao carrinho. A ação RemoveSingleProduct remove do carrinho o produto com o id especificado, sem importar a quantidade. A ação RemoveAllProducts esvazia o carrinho. As 3 ações de UserCartController retornam uma view component do carrinho, para que a página possa ser modificada sem recarregá-la.
+
+A ação Checkout do HomeController e todas as ações do UserCartController necessitam de informações de um usuário. Devido a isso, somente é autorizado o uso dessas ações por um usuário logado. A ação Index do HomeController pode ser acessada sem autorização. Se o usuário estiver logado, a página inicial mostrará seu carrinho, caso contrário não mostrará um carrinho.
+
+### Métodos e Rotas
+
+A API é documentada usando Swagger. A documentação pode ser acessada na página /swagger.
+
+Se for necessário enviar alguma informação, ela é enviada pela rota ou por uma query string. 
 
 O HomeController utiliza os seguintes métodos e rotas:
 
@@ -93,11 +103,6 @@ DELETE /UserCart/RemoveSingleProduct/productId/{productId}/createCheckoutButton/
 DELETE /UserCart/RemoveAllProducts
 
 
-O HomeController é responsável por retornar a página inicial e a página de checkout. Isto corresponde às ações Index e Checkout da classe. A ação Index recebe como entrada uma string query, que é o texto enviado pela barra de pesquisa. Se a página inicial for acessada sem usar a barra de pesquisa, tal query será null. Neste caso é retornada a página inicial com todos os produtos. Caso contrário, são selecionados produtos de acordo com a string query e é retornada a página com somente esses produtos.
-
-O UserCartController é o controller responsável por receber requisições do cliente para manipular seu carrinho. Ele possui 3 ações: Add, RemoveSingleProduct e RemoveAllProducts. A ação Add adiciona uma quantidade de um único produto ao carrinho. A ação RemoveSingleProduct remove do carrinho o produto com o id especificado, sem importar a quantidade. A ação RemoveAllProducts esvazia o carrinho. As 3 ações de UserCartController retornam uma view component do carrinho, para que a página possa ser modificada sem recarregá-la.
-
-A ação Checkout do HomeController e todas as ações do UserCartController necessitam de informações de um usuário. Devido a isso, somente é autorizado o uso dessas ações por um usuário logado. A ação Index do HomeController pode ser acessada sem autorização. Se o usuário estiver logado, a página inicial mostrará seu carrinho, caso contrário não mostrará um carrinho.
 
 ## Views
 
