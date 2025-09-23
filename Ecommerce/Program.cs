@@ -68,7 +68,7 @@ app.MapIdentityApi<IdentityUser>();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/")
+    pattern: "")
     .WithStaticAssets();
 
 app.MapRazorPages()

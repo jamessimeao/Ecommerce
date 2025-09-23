@@ -4,17 +4,15 @@
     const productIdTypeIsCorrect = Number.isInteger(productId) && productId >= 1;
     // Note that the if part won't execute if quantity=0,
     // which avoids calling the backend.
-    if (createCheckoutButtonTypeIsCorrect && quantityTypeIsCorrect && productIdTypeIsCorrect) {
-
-        const jsonToSend = JSON.stringify({ "createCheckoutButton": createCheckoutButton, "quantity": quantity, "productId": productId });
-        const request = new Request("/UserCart/Add",
+    if (createCheckoutButtonTypeIsCorrect && quantityTypeIsCorrect && productIdTypeIsCorrect)
+    {
+        const request = new Request(`/UserCart/Add/productId/${productId}/quantity/${quantity}/createCheckoutButton/${createCheckoutButton}`,
             {
                 method: "POST",
                 headers:
                 {
                     "Content-Type": "application/json",
                 },
-                body: jsonToSend,
             });
 
         try {
@@ -41,16 +39,15 @@
 async function RemoveFromCart(createCheckoutButton, productId) {
     const createCheckoutButtonTypeIsCorrect = (typeof (createCheckoutButton) === 'boolean');
     const productIdTypeIsCorrect = Number.isInteger(productId) && productId >= 1;
-    if (createCheckoutButtonTypeIsCorrect && productIdTypeIsCorrect) {
-        const jsonToSend = JSON.stringify({ "createCheckoutButton": createCheckoutButton, "productId": productId });
-        const request = new Request("/UserCart/RemoveSingleProduct",
+    if (createCheckoutButtonTypeIsCorrect && productIdTypeIsCorrect)
+    {
+        const request = new Request(`/UserCart/RemoveSingleProduct/productId/${productId}/createCheckoutButton/${createCheckoutButton}`,
             {
                 method: "DELETE",
                 headers:
                 {
                     "Content-Type": "application/json",
                 },
-                body: jsonToSend,
             });
         try {
             const response = await fetch(request);

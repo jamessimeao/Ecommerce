@@ -10,6 +10,7 @@ using Ecommerce.DTOs;
 namespace Ecommerce.Controllers
 {
     [Authorize]
+    [Route("[controller]/[action]/")]
     public class UserCartController : Controller
     {
         private readonly IDbConnection _dbConnection;
@@ -19,34 +20,37 @@ namespace Ecommerce.Controllers
             _dbConnection = dbConnection;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Add([FromBody] ClientRequestDTO dto)
+        [HttpPost("productId/{productId}/quantity/{quantity}/createCheckoutButton/{createCheckoutButton}")]
+        public async Task<IActionResult> Add(
+            [FromRoute] uint productId,
+            [FromRoute] uint quantity,
+            [FromRoute] bool createCheckoutButton)
         {
-            if (dto.Quantity >= 1 && dto.ProductId >= 1)
+            if (productId >= 1 && quantity >= 1)
             {
-                CartEntryDTO cartEntry = new CartEntryDTO { Quantity = dto.Quantity, ProductId = dto.ProductId };
+                CartEntryDTO cartEntry = new CartEntryDTO { Quantity = quantity, ProductId = productId };
                 string userId = UserInfo.GetUserId(User);
                 bool succeded = await DataManipulation.AddToUserCart(_dbConnection, userId, cartEntry);
                 if (succeded)
                 {
-                    return ViewComponent("Cart", new { createCheckoutButton = dto.CreateCheckoutButton, user = User });
+                    return ViewComponent("Cart", new { createCheckoutButton = createCheckoutButton, user = User });
                 }
             }
 
             return BadRequest();
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> RemoveSingleProduct([FromBody] ClientRequestDTO dto)
+        [HttpDelete("productId/{productId}/createCheckoutButton/{createCheckoutButton}")]
+        public async Task<IActionResult> RemoveSingleProduct([FromRoute] uint productId, [FromRoute] bool createCheckoutButton)
         {
             // In this case, id is the id of the product, which should be >= 1
-            if (dto.ProductId >= 1)
+            if (productId >= 1)
             {
                 string userId = UserInfo.GetUserId(User);
-                bool succeded = await DataManipulation.RemoveFromUserCart(_dbConnection, userId, dto.ProductId);
+                bool succeded = await DataManipulation.RemoveFromUserCart(_dbConnection, userId, productId);
                 if (succeded)
                 {
-                    return ViewComponent("Cart", new { createCheckoutButton = dto.CreateCheckoutButton, user = User });
+                    return ViewComponent("Cart", new { createCheckoutButton = createCheckoutButton, user = User });
                 }
             }
                 
