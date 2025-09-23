@@ -73,7 +73,7 @@ Foram criados 2 controllers:
 
 * HomeController;
 * UserCartController.
-* 
+
 O HomeController é responsável por retornar a página inicial e a página de checkout. Isto corresponde às ações Index e Checkout da classe. A ação Index recebe como entrada uma string query, que é o texto enviado pela barra de pesquisa. Se a página inicial for acessada sem usar a barra de pesquisa, tal query será null. Neste caso é retornada a página inicial com todos os produtos. Caso contrário, são selecionados produtos de acordo com a string query e é retornada a página com somente esses produtos.
 
 O UserCartController é o controller responsável por receber requisições do cliente para manipular seu carrinho. Ele possui 3 ações: Add, RemoveSingleProduct e RemoveAllProducts. A ação Add adiciona uma quantidade de um único produto ao carrinho. A ação RemoveSingleProduct remove do carrinho o produto com o id especificado, sem importar a quantidade. A ação RemoveAllProducts esvazia o carrinho. As 3 ações de UserCartController retornam uma view component do carrinho, para que a página possa ser modificada sem recarregá-la.
