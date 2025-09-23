@@ -25,6 +25,8 @@ O ASP.NET Core Identity é utilizado para dar as funcionalidades de criar usuár
 
 # O site
 
+[![A Loja Online](https://img.youtube.com/vi/6AX3ukaR7UU/0.jpg)](https://www.youtube.com/watch?v=6AX3ukaR7UU)
+
 A página inicial mostra todos produtos da loja:
 
 <img width="1920" height="1623" alt="home" src="https://github.com/user-attachments/assets/d12e85db-befc-4e84-97a0-0e60195435b9" />
