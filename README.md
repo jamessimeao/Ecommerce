@@ -77,13 +77,17 @@ Foram criados 2 controllers:
 Se for necessário enviar alguma informação, ela é enviada pela rota ou por uma query string. O HomeController utiliza as seguintes rotas:
 
 /
+
 /Checkout
+
 /Error
 
 Estas são as rotas do UserCartController:
 
 /UserCart/Add/productId/{productId}/quantity/{quantity}/createCheckoutButton/{createCheckoutButton}
+
 /UserCart/RemoveSingleProduct/productId/{productId}/createCheckoutButton/{createCheckoutButton}
+
 /UserCart/RemoveAllProducts
 
 
